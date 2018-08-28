@@ -21,7 +21,7 @@ and execute:
 php composer update
 ```
 
-Миграция:
+Run migrations:
 
 ```
 php yii migrate --migrationPath=vendor/pantera-digital/yii2-helpdesk/migrations
