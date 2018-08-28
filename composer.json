@@ -1,0 +1,25 @@
+{
+  "name": "pantera-digital/yii2-helpdesk",
+  "description": "Yii2 helpdesk module",
+  "keywords": [
+    "yii2",
+    "yii2",
+    "helpdesk"
+  ],
+  "homepage": "https://github.com/pantera-digital/yii2-helpdesk",
+  "type": "yii2-extension",
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": "*",
+    "yiisoft/yii2-bootstrap": "*"
+  },
+  "config": {
+    "process-timeout": 1800
+  },
+  "autoload": {
+    "psr-4": {
+      "pantera\\helpdesk\\": ""
+    }
+  }
+}
