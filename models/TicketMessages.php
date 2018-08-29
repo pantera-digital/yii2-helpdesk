@@ -18,6 +18,21 @@ use Yii;
  */
 class TicketMessages extends \yii\db\ActiveRecord
 {
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => \pantera\media\behaviors\MediaUploadBehavior::className(),
+                'buckets' => [
+                    'mediaOther' => [
+                        'multiple' => true,
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +51,6 @@ class TicketMessages extends \yii\db\ActiveRecord
             [['ticket_id', 'is_admin'], 'integer'],
             [['message'], 'string'],
             [['created_at'], 'safe'],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => TicketMessageFile::className(), 'targetAttribute' => ['id' => 'message_id']],
         ];
     }
 
@@ -57,15 +71,7 @@ class TicketMessages extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTickets()
-    {
-        return $this->hasOne(TicketMessageFile::className(), ['message_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTickets()
+    public function getTicket()
     {
         return $this->hasOne(Tickets::className(), ['id' => 'ticket_id']);
     }

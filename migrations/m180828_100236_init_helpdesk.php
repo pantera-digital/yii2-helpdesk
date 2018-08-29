@@ -15,10 +15,13 @@ class m180828_100236_init_helpdesk extends Migration
         $this->createTable('{{%tickets}}',[
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->unsigned()->null()->comment('User identity'),
+            'admin' => $this->tinyInteger()->notNull()->defaultValue(0),
             'subject' => $this->string()->notNull()->comment('Ticket theme'),
             'email' => $this->string()->notNull()->comment('User e-mail'),
             'name' => $this->string()->notNull()->comment('User name'),
             'status' => $this->tinyInteger()->unsigned()->notNull()->comment('Ticket status'),
+            'last_message' => $this->timestamp()->null()->comment('Time of last message in this ticket'),
+            'important' => $this->tinyInteger()->unsigned()->defaultValue(0),
             'created_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP"),
             'updated_at' => $this->timestamp()->null()->defaultExpression("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
         ]);
@@ -31,19 +34,8 @@ class m180828_100236_init_helpdesk extends Migration
             'created_at' => $this->timestamp()->notNull()->defaultExpression("CURRENT_TIMESTAMP"),
         ]);
 
-        $this->createTable('{{%ticket_message_file}}',[
-            'id' => $this->primaryKey(),
-            'message_id' => $this->integer()->notNull()->comment('Message identity from ticket_message'),
-            'file' => $this->string()->notNull()->comment('File path')
-        ]);
-
         $this->createIndex('hlpdsk-tkt-msg-ix', '{{%ticket_messages}}', 'ticket_id');
-        $this->addForeignKey('hpdsk-tkt-msg-fk','{{%tickets}}','id', '{{%ticket_messages}}', 'ticket_id');
-
-        $this->createIndex('hlpdsk-tkt-msg-file-ix', '{{%ticket_message_file}}', 'message_id');
-        $this->addForeignKey('hpdsk-tkt-msg-file-fk','{{%ticket_messages}}','id', '{{%ticket_message_file}}', 'message_id');
-
-
+        $this->addForeignKey('hpdsk-tkt-msg-fk', '{{%ticket_messages}}', 'ticket_id','{{%tickets}}','id');
     }
 
     /**

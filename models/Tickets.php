@@ -20,6 +20,12 @@ use Yii;
  */
 class Tickets extends \yii\db\ActiveRecord
 {
+    const STATUS_UPDATED_BY_ADMIN = 0;
+    const STATUS_UPDATED_BY_USER = 1;
+    const STATUS_CLOSED = 2;
+
+    public $files = [];
+    public $message = '';
     /**
      * {@inheritdoc}
      */
@@ -34,7 +40,7 @@ class Tickets extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'status'], 'integer'],
+            [['user_id', 'status','important'], 'integer'],
             [['subject', 'email', 'name', 'status'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
             [['subject', 'email', 'name'], 'string', 'max' => 255],

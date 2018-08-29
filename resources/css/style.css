@@ -1,0 +1,41 @@
+ul.tickets {
+    padding:0;
+}
+ul.tickets li {
+    background:#a2a5ae;
+    padding:10px;
+    margin-bottom: 10px;
+    list-style: none;
+    margin-left:0;
+}
+ul.tickets li a {
+    color:white;
+}
+ul#message-files{
+    display: flex;
+    margin-left: 10px;
+    padding:0;
+    list-style: none;
+}
+ul#message-files li{
+    margin-left:10px;
+}
+
+.card#messages  .card-header {
+    position: relative;
+    display: block;
+    padding: 1px 10px;
+    border-radius: 2px 2px 0 0;
+}
+
+.card#messages .card-body {
+    position: relative;
+    display: block;
+    padding: 1px 10px;
+    border-radius: 2px 2px 0 0;
+}
+
+.card#messages .ticket-message {
+    font-size: 14px;
+    padding: 17px;
+}
