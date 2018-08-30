@@ -19,6 +19,7 @@ class m180828_100236_init_helpdesk extends Migration
             'subject' => $this->string()->notNull()->comment('Ticket theme'),
             'email' => $this->string()->notNull()->comment('User e-mail'),
             'name' => $this->string()->notNull()->comment('User name'),
+            'comment' => $this->text()->comment('Ticket comment'),
             'status' => $this->tinyInteger()->unsigned()->notNull()->comment('Ticket status'),
             'last_message' => $this->timestamp()->null()->comment('Time of last message in this ticket'),
             'important' => $this->tinyInteger()->unsigned()->defaultValue(0),
@@ -45,7 +46,6 @@ class m180828_100236_init_helpdesk extends Migration
     {
         $this->dropTable('{{%tickets}}');
         $this->dropTable('{{%ticket_messages}}');
-        $this->dropTable('{{%ticket_message_file}}');
     }
 
     /*

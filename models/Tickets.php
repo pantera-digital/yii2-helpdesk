@@ -2,6 +2,7 @@
 
 namespace pantera\helpdesk\models;
 
+use pantera\helpdesk\Module;
 use Yii;
 
 /**
@@ -43,9 +44,24 @@ class Tickets extends \yii\db\ActiveRecord
             [['user_id', 'status','important'], 'integer'],
             [['subject', 'email', 'name', 'status'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
-            [['subject', 'email', 'name'], 'string', 'max' => 255],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => TicketMessages::className(), 'targetAttribute' => ['id' => 'ticket_id']],
+            [['subject', 'email', 'name','comment'], 'string', 'max' => 255],
         ];
+    }
+
+    public function getUser() {
+        /** @var Module $hd */
+        $hd = Yii::$app->getModule('helpdesk');
+        return $this->hasOne($hd->userClass, ['id' => 'user_id']);
+    }
+
+
+    public function getLastAnswer()
+    {
+        return $this->getMessages()->orderBy('id DESC')->andWhere(['is_admin' => 1])->one();
+    }
+
+    public function getLastMessage() {
+        return $this->getMessages()->orderBy('id DESC')->one();
     }
 
     /**

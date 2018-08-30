@@ -7,6 +7,7 @@ class Module extends \yii\base\Module {
     public $nameAttribute = 'name';
     public $emailAttribute = 'email';
     public $googleCaptchaSiteKey = '';
-    public $fileUploadDir = '';
+    public $googleCaptchaSecret = '';
     public $mailNotificationView = 'notification';
+    public $userClass = '\dektrium\user\models\User';
 }

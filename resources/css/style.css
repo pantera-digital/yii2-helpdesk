@@ -13,12 +13,12 @@ ul.tickets li a {
 }
 ul#message-files{
     display: flex;
-    margin-left: 10px;
+    margin-right: 10px;
     padding:0;
     list-style: none;
 }
 ul#message-files li{
-    margin-left:10px;
+    margin-right:10px;
 }
 
 .card#messages  .card-header {
@@ -38,4 +38,8 @@ ul#message-files li{
 .card#messages .ticket-message {
     font-size: 14px;
     padding: 17px;
+}
+
+#tickets-list .panel {
+    margin-bottom:1px !important;
 }

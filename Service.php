@@ -17,6 +17,15 @@ class Service extends BaseObject {
     const TYPE_NEW_TICKET_NOTIFICATION = 'ticket';
     const TYPE_NEW_RESPONSE_NOTIFICATION = 'response';
     const TYPE_CLOSED_TICKET_NOTIFICATION = 'closed';
+
+    /**
+     * @param Tickets $ticket
+     */
+    public static function toggleImportant(Tickets $ticket) {
+        $ticket->important = $ticket->important ? 0 : 1;
+        $ticket->save();
+    }
+
     /**
      * @return array|null|\yii\db\ActiveRecord[]
      */
@@ -49,7 +58,7 @@ class Service extends BaseObject {
         $ticket->last_message = new Expression('NOW()');
         $ticket->save();
         $message->ticket_id = $ticket->id;
-        $ticket->admin = Yii::$app->user->can('admin');
+        $message->is_admin = Yii::$app->user->can('admin') ?: 0;
         if($message->save()) {
             $ticket->refresh();
             if(count($ticket->messages) > 1) {
