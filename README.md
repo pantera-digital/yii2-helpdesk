@@ -101,5 +101,5 @@ helpdesk/default/view
 ```
 helpdesk/defaul/index
 ```
-###NOTICE: Tested only on yii2 advanced application
+### NOTICE: Tested only on yii2 advanced application
 
