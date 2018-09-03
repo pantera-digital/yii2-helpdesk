@@ -87,17 +87,17 @@ php yii migrate --migrationPath=vendor/pantera-digital/yii2-helpdesk/migrations
 
 Available actions:
 
-######For admin:
+###### For admin:
 ```
 helpdesk/default/index
 helpdesk/default/view
 ```
-######For user: 
+###### For user: 
 ```
 helpdesk/default/index
 helpdesk/default/view
 ```
-######For no-auth user:
+###### For no-auth user:
 ```
 helpdesk/defaul/index
 ```
