@@ -53,6 +53,15 @@ Configure your app :
     ...
 ];
 ```
+Configure your admin app:
+```php
+ 'helpdesk' => [
+            'class' => \pantera\helpdesk\Module::class,
+            'viewPath' => '@vendor/pantera-digital/yii2-helpdesk/admin/views',
+            'controllerNamespace' => 'pantera\helpdesk\admin\controllers'
+ ],
+```
+
 Add to your console config:
 ```php
  ...
@@ -68,6 +77,7 @@ Add to your console config:
         ],
  ... 
 ```
+
 or run migrations:
 
 ```
@@ -75,5 +85,21 @@ php yii migrate --migrationPath=vendor/pantera-digital/yii2-media/migrations
 php yii migrate --migrationPath=vendor/pantera-digital/yii2-helpdesk/migrations
 ```
 
+Available actions:
 
+######For admin:
+```
+helpdesk/default/index
+helpdesk/default/view
+```
+######For user: 
+```
+helpdesk/default/index
+helpdesk/default/view
+```
+######For no-auth user:
+```
+helpdesk/defaul/index
+```
+###NOTICE: Tested only on yii2 advanced application
 
