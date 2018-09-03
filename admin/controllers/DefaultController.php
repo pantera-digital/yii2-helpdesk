@@ -10,6 +10,7 @@ use pantera\helpdesk\models\TicketMessages;
 use pantera\helpdesk\models\Tickets;
 use pantera\helpdesk\models\TicketsSearch;
 use Sabberworm\CSS\Property\Import;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
 
@@ -19,6 +20,23 @@ use Yii;
  */
 class DefaultController extends Controller {
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ]
+                ],
+            ],
+        ];
+    }
 
 
     public function actions()

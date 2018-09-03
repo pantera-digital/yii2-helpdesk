@@ -1,8 +1,8 @@
 # yii2-helpdesk
+NOTICE: This module depends on pantera-digital/yii2-media
 
 Install
 ---------------------------------
-
 Run
 
 ```
@@ -20,10 +20,60 @@ and execute:
 ```
 php composer update
 ```
-
-Run migrations:
+Configure your app :
+```php
+ [
+    'bootstrap' => [... ,'media'],
+    'modules' => [
+        ...
+        'media' => [
+            'class' => pantera\media\Module::className(),
+            'permissions' => ['admin'], //permissions for administrate media module
+            'mediaUrlAlias' => 'path for url access to media files',
+            'mediaFileAlias' => 'path for storage media files',
+            'tableName' => 'pantera_media', //table name for media 
+        ],
+        'helpdesk' => [
+            'class' => \pantera\helpdesk\Module::class, 
+            'profileModel' => function() { //here u can catch the current user profile model
+                if(!Yii::$app->user->isGuest) {
+                    return Yii::$app->user->identity->profile; 
+                } else {
+                    return null;
+                }
+            },
+            'nameAttribute' => 'HERE NAME ATTRIBUTE OF USER PROFILE MODEL',
+            'emailAttribute' => 'HERE EMAIL ATTRIBUTE OF USER MODEL',
+            'googleCaptchaSiteKey' => 'here your google recaptcha site key',
+            'googleCaptchaSecret' => 'here your google recaptcha secret',
+            'mailNotificationView' => 'here you can set the path to your mail view like @app/mail/view_name',
+            'userClass' => 'this is a class for your user module by default it dependency on \dektrium\user\models\User';
+        ],  
+    ],
+    ...
+];
+```
+Add to your console config:
+```php
+ ...
+ 'controllerMap' => [
+        'migrate' => [
+            'class' => MigrateController::className(),
+            'migrationPath' => [
+                ....
+                '@vendor/pantera-digital/yii2-helpdesk/migrations',
+                '@pantera/media/migrations',
+                ....
+            ],
+        ],
+ ... 
+```
+or run migrations:
 
 ```
+php yii migrate --migrationPath=vendor/pantera-digital/yii2-media/migrations
 php yii migrate --migrationPath=vendor/pantera-digital/yii2-helpdesk/migrations
 ```
+
+
 
