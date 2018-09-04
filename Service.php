@@ -90,8 +90,9 @@ class Service extends BaseObject {
     public function sendMailNotificationByType(string $type, Tickets $ticket)  {
         /** @var Module $module */
         $module = Yii::$app->getModule('helpdesk');
+        $preMessage =  Html::tag('h3','Добрый день.') . '<br>';
         $lastMessage = $ticket->getMessages()->orderBy('id DESC')->one();
-        $ticketLink = Html::a('обращение под номером '. $ticket->id, 'http://' . $_SERVER['HTTP_HOST'] . '/helpdesk/default/view/' . $ticket->id);
+        $ticketLink = Html::a('Обращение под номером ' . $ticket->id, 'http://' . $_SERVER['HTTP_HOST'] . '/helpdesk/default/view/' . $ticket->id);
         $adminMail = Yii::$app->params['adminEmail'];
         $message = '';
         $subject = '';
@@ -99,7 +100,7 @@ class Service extends BaseObject {
         switch ($type):
             case self::TYPE_NEW_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $ticketLink . ' успешно зарегистрировано.',
+                        'content' => $preMessage . $ticketLink . ' успешно зарегистрировано.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
@@ -107,7 +108,7 @@ class Service extends BaseObject {
                     ->send();
 
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $ticketLink . ' быдо зарегистрировано в helpdesk.',
+                        'content' => $preMessage . $ticketLink . ' было зарегистрировано в helpdesk.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
@@ -117,7 +118,7 @@ class Service extends BaseObject {
             case self::TYPE_NEW_RESPONSE_NOTIFICATION:
                 if($lastMessage->ticket->admin) {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => 'На' . $ticketLink . ' ответили',
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
@@ -125,7 +126,7 @@ class Service extends BaseObject {
                     ->send();
                 } else {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => 'На' . $ticketLink . ' ответили',
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
@@ -135,7 +136,7 @@ class Service extends BaseObject {
                 break;
             case self::TYPE_CLOSED_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => 'Ваше ' . $ticketLink . ' закрыто',
+                        'content' => $preMessage . 'Ваше ' . strtolower($ticketLink) . ' закрыто',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
