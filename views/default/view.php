@@ -1,5 +1,8 @@
 <?php
 $this->title = 'Вопросы';
+$this->params['breadcrumbs'][] = ['url' => ['index'], 'label' => 'Helpdesk'];
+$this->params['breadcrumbs'][] = 'Тикет [#' . str_pad($ticket->id, 4, 0, STR_PAD_LEFT) . ']';
+
 \pantera\helpdesk\Assets::register($this);
 ?>
 

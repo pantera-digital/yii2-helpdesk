@@ -1,8 +1,10 @@
 <?php
 /**
  * @var $searchModel \pantera\helpdesk\models\TicketsSearch
+ * @var $this \yii\web\View
  */
 \pantera\helpdesk\Assets::register($this);
+$this->params['breadcrumbs'][] = 'Helpdesk';
 ?>
 <ul class="nav nav-tabs material-tab">
     <li class="<?= $searchModel->withoutResponse ? 'active' : '' ?>">

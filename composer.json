@@ -13,7 +13,7 @@
     "php": ">=5.4.0",
     "yiisoft/yii2": "*",
     "yiisoft/yii2-bootstrap": "*",
-    "pantera-digital/yii2-media": "dev-master",
+    "pantera-digital/yii2-media": "dev-master"
   },
   "config": {
     "process-timeout": 1800

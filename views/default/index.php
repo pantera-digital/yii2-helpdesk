@@ -1,5 +1,6 @@
 <?php
-\pantera\helpdesk\Assets::register($this)
+\pantera\helpdesk\Assets::register($this);
+$this->params['breadcrumbs'][] = 'Helpdesk';
 ?>
 <div class="card">
     <div class="card-body card-padding">
