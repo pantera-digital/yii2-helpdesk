@@ -104,42 +104,42 @@ class Service extends BaseObject {
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
-                    ->setSubject('Ваше обращение успешно зарегистрировано')
+                    ->setSubject('Ваше обращение успешно зарегистрировано.')
                     ->send();
 
                     Yii::$app->mailer->compose($module->mailNotificationView,[
                         'content' => $preMessage . $ticketLink . ' было зарегистрировано в helpdesk.<br>' .
-                        'Суть обращения: ' . $lastMessage->message,
+                        'Суть обращения: <br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
-                    ->setSubject('Новое обращение в helpdesk')
+                    ->setSubject('Новое обращение в helpdesk.')
                     ->send();
                 break;
             case self::TYPE_NEW_RESPONSE_NOTIFICATION:
                 if($lastMessage->is_admin) {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили<br>' .
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили.<br>' .
                         'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
-                    ->setSubject('На ваше обращение ответили')
+                    ->setSubject('На ваше обращение ответили.')
                     ->send();
                 } else {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили<br>' .
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили.<br>' .
                             'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
-                    ->setSubject('В helpdesk новый ответ в обращении')
+                    ->setSubject('В helpdesk новый ответ в обращении.')
                     ->send();
                 }
                 break;
             case self::TYPE_CLOSED_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . 'Ваше ' . strtolower($ticketLink) . ' закрыто',
+                        'content' => $preMessage . 'Ваше ' . strtolower($ticketLink) . ' закрыто.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
