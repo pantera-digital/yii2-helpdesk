@@ -108,7 +108,8 @@ class Service extends BaseObject {
                     ->send();
 
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . $ticketLink . ' было зарегистрировано в helpdesk.',
+                        'content' => $preMessage . $ticketLink . ' было зарегистрировано в helpdesk.<br>' .
+                        'Суть обращения: ' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
@@ -116,9 +117,10 @@ class Service extends BaseObject {
                     ->send();
                 break;
             case self::TYPE_NEW_RESPONSE_NOTIFICATION:
-                if($lastMessage->ticket->admin) {
+                if($lastMessage->is_admin) {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили',
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили<br>' .
+                        'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
@@ -126,7 +128,8 @@ class Service extends BaseObject {
                     ->send();
                 } else {
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили',
+                        'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили<br>' .
+                            'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
