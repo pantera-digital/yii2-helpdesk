@@ -13,7 +13,7 @@ class DownloadAction extends Action {
 
     public function run($id) {
         $model = Media::findOne($id);
-        $ticket = Tickets::findOne($id);
+        $ticket = Tickets::findOne($model->model_id);
         if (!Yii::$app->user->can('admin')) {
             if ($ticket->user_id !== Yii::$app->user->id) {
                 throw new NotFoundHttpException();
