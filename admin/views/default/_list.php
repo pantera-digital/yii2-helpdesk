@@ -103,6 +103,7 @@ $lastMessage = $model->getLastMessage();
                         }
                         $form = \yii\widgets\ActiveForm::begin([
                             'action' => ['create','id' => $ticket->id],
+                            'id' => 'response-form-for-ticket-' . $ticket->id,
                             'options' => [
                                 'class' => 'form form-horizontal ticket-response-form',
                             ],

@@ -36,18 +36,18 @@ class CreateAction extends Action {
             if(is_null($id) && Service::createTicket($ticket, $message)) {
                 if(!Yii::$app->request->isAjax) {
                     Yii::$app->session->setFlash('success', 'Тикет успешно создан');
-                    $this->controller->redirect(Yii::$app->request->referrer);
+                    return $this->controller->redirect(Yii::$app->request->referrer);
                 } else {
-                    $this->controller->asJson(['status' => 'success']);
+                    return $this->controller->asJson(['status' => 'success']);
                 }
             } elseif(!is_null($id)) {
                 $ticket = $this->controller->findTicket($id);
                 if(Service::createMessage($ticket, $message)) {
                     if(!Yii::$app->request->isAjax) {
                         Yii::$app->session->setFlash('success', 'Сообщение успешно отправлено');
-                        $this->controller->redirect(Yii::$app->request->referrer);
+                        return $this->controller->redirect(Yii::$app->request->referrer);
                     } else {
-                        $this->controller->asJson(['status' => 'success']);
+                        return $this->controller->asJson(['status' => 'success']);
                     }
                 }
             }

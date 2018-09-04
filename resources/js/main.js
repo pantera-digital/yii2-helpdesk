@@ -39,6 +39,6 @@ $(document).on('beforeSubmit', 'form.ticket-response-form', function(e) {
                 }
             }
         });
-        $(this).reset();
+        document.getElementById($(this).attr('id')).reset();
         return false;
 });
