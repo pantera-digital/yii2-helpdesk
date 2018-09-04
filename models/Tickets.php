@@ -26,7 +26,7 @@ class Tickets extends \yii\db\ActiveRecord
     const STATUS_CLOSED = 2;
 
     public $files = [];
-    public $message = '';
+
     /**
      * {@inheritdoc}
      */
