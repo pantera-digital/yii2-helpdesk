@@ -78,7 +78,6 @@ class DefaultController extends Controller {
         return $this->render('view',[
             'ticket' => $ticket,
             'userTickets' => Service::getActiveTicketsForCurrentUser(),
-            'ticketsForAdmin' => Service::getActiveTicketsForAdmin(),
             'messages' => $ticket->getMessages()->orderBy('id DESC')->all(),
             'newMessage' => new TicketMessages(),
         ]);

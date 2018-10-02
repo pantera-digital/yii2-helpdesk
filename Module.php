@@ -10,4 +10,6 @@ class Module extends \yii\base\Module {
     public $googleCaptchaSecret = '';
     public $mailNotificationView = 'notification';
     public $userClass = '\dektrium\user\models\User';
+    public $frontendUrl = null;
+    public $backendUrl = null;
 }

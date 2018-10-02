@@ -90,9 +90,13 @@ class Service extends BaseObject {
     public function sendMailNotificationByType(string $type, Tickets $ticket)  {
         /** @var Module $module */
         $module = Yii::$app->getModule('helpdesk');
+
+        $frontendUrl = $module->frontendUrl ?: 'https://' . $_SERVER['HTTP_HOST'];
+        $backendUrl = $module->backendUrl ?: 'https://' . $_SERVER['HTTP_HOST'];
         $preMessage =  Html::tag('h3','Добрый день.') . '<br>';
         $lastMessage = $ticket->getMessages()->orderBy('id DESC')->one();
-        $ticketLink = Html::a('Обращение под номером ' . $ticket->id, 'http://' . $_SERVER['HTTP_HOST'] . '/helpdesk/default/view/' . $ticket->id);
+        $ticketLink = Html::a('Обращение под номером ' . $ticket->id, $frontendUrl . '/helpdesk/default/view/' . $ticket->id);
+        $adminTicketLink = Html::a('Обращение под номером ' . $ticket->id, $backendUrl . '/helpdesk/default/view/' . $ticket->id);
         $adminMail = Yii::$app->params['adminEmail'];
         $message = '';
         $subject = '';
@@ -100,7 +104,7 @@ class Service extends BaseObject {
         switch ($type):
             case self::TYPE_NEW_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . $ticketLink . ' успешно зарегистрировано.',
+                        'content' => $preMessage . $adminTicketLink . ' успешно зарегистрировано.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
