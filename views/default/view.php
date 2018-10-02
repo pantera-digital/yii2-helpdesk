@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = 'Тикет [#' . str_pad($ticket->id, 4, 0, ST
         <?php if ($ticket->status !== \pantera\helpdesk\models\Tickets::STATUS_CLOSED): ?>
             <?= $this->render('_formRequest', array('newMessage' => $newMessage, 'ticket' => $ticket)); ?>
         <?php else: ?>
-            <div class="alert alert-info" style="margin-top: <?= (UserModule::isAdmin() ? '20px' : '') ?>;">Тикет закрыт</div>
+            <div class="alert alert-info" style="margin-top: <?= (Yii::$app->user->can('admin') ? '20px' : '') ?>;">Тикет закрыт</div>
         <?php endif; ?>
         <?= $this->render('_messages', array('messages' => $messages)); ?>
     </div>
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = 'Тикет [#' . str_pad($ticket->id, 4, 0, ST
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body card-padding">
-                    <?= $this->render('_tickets', array('tickets' => $ticketsForAdmin ?: $userTickets)); ?>
+                    <?= $this->render('_tickets', array('tickets' => $userTickets)); ?>
                 </div>
             </div>
         </div>
