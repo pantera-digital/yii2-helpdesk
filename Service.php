@@ -104,7 +104,7 @@ class Service extends BaseObject {
         switch ($type):
             case self::TYPE_NEW_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
-                        'content' => $preMessage . $adminTicketLink . ' успешно зарегистрировано.',
+                        'content' => $preMessage . $ticketLink . ' успешно зарегистрировано.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
