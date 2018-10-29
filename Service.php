@@ -96,7 +96,7 @@ class Service extends BaseObject {
         $preMessage =  Html::tag('h3','Добрый день.') . '<br>';
         $lastMessage = $ticket->getMessages()->orderBy('id DESC')->one();
         $ticketLink = Html::a('Обращение под номером ' . $ticket->id, $frontendUrl . '/helpdesk/default/view/' . $ticket->id);
-        $adminTicketLink = Html::a('Обращение под номером ' . $ticket->id, $backendUrl . '/helpdesk/default/view/' . $ticket->id);
+        $adminTicketLink = Html::a('Обращение под номером ' . $ticket->id, $backendUrl . '/helpdesk');
         $adminMail = Yii::$app->params['adminEmail'];
         $message = '';
         $subject = '';
