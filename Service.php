@@ -107,6 +107,7 @@ class Service extends BaseObject {
                         'content' => $preMessage . $ticketLink . ' успешно зарегистрировано.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo(Yii::$app->user->identity->email ?? Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
                     ->setSubject('Ваше обращение успешно зарегистрировано.')
                     ->send();
@@ -127,6 +128,7 @@ class Service extends BaseObject {
                         'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo(Yii::$app->user->identity->email ?? Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
                     ->setSubject('На ваше обращение ответили.')
                     ->send();
@@ -146,6 +148,7 @@ class Service extends BaseObject {
                         'content' => $preMessage . 'Ваше ' . strtolower($ticketLink) . ' закрыто.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo(Yii::$app->user->identity->email ?? Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
                     ->setSubject('Ваше обращение закрыто.')
                     ->send();
