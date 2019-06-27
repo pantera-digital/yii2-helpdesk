@@ -15,7 +15,7 @@ $(document).on('click','.hide-history',function () {
     $(this).parents('.panel').first().find('.all-messages').first().toggleClass('hidden');
     return false;
 });
-function getMessagesData(href,selector) {
+function getMessagesData(href, selector) {
     selector.css('opacity','0.3')
     $.get(href, function(data){
         selector.html(data)
@@ -23,6 +23,7 @@ function getMessagesData(href,selector) {
     });
 }
 $(document).on('beforeSubmit', 'form.ticket-response-form', function(e) {
+        e.preventDefault()
         var data = $(this).serialize();
         var action = $(this).attr('action');
         var href = $(this).parents('.panel').find('.hide-history').first().attr('href');
@@ -35,7 +36,6 @@ $(document).on('beforeSubmit', 'form.ticket-response-form', function(e) {
             success:function(d) {
                 if(d.status === 'success') {
                     getMessagesData(href, allMessagesWrap);
-                    return false;
                 }
             }
         });

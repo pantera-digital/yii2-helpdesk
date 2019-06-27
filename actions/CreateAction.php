@@ -16,6 +16,7 @@ class CreateAction extends Action {
                 'secret' => $this->controller->module->googleCaptchaSecret,
                 'response' => Yii::$app->request->post('g-recaptcha-response')
             ]);
+
             $opts = array('http' =>
                 [
                     'method' => 'POST',
@@ -23,15 +24,19 @@ class CreateAction extends Action {
                     'content' => $postdata
                 ]
             );
+
             $context = stream_context_create($opts);
             $result = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
             $data = Json::decode($result);
         }
         $ticket = new Tickets();
         $message = new TicketMessages();
+
         $params = Yii::$app->request->post();
+
         $ticket->load($params);
         $message->load($params);
+
         if(!Yii::$app->user->isGuest || $data['success']) {
             if(is_null($id) && Service::createTicket($ticket, $message)) {
                 if(!Yii::$app->request->isAjax) {

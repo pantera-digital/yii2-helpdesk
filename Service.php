@@ -62,7 +62,7 @@ class Service extends BaseObject {
         if($message->save()) {
             $ticket->refresh();
             if(count($ticket->messages) > 1) {
-                self::sendMailNotificationByType(self::TYPE_NEW_RESPONSE_NOTIFICATION, $ticket);
+                (new self)->sendMailNotificationByType(self::TYPE_NEW_RESPONSE_NOTIFICATION, $ticket);
             }
             return true;
         }
