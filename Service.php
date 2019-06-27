@@ -14,6 +14,7 @@ use yii\helpers\Url;
 use yii\web\UploadedFile;
 
 class Service extends BaseObject {
+
     const TYPE_NEW_TICKET_NOTIFICATION = 'ticket';
     const TYPE_NEW_RESPONSE_NOTIFICATION = 'response';
     const TYPE_CLOSED_TICKET_NOTIFICATION = 'closed';
@@ -48,7 +49,7 @@ class Service extends BaseObject {
     public static function closeTicket(Tickets $ticket) {
        $ticket->status = Tickets::STATUS_CLOSED;
        if($ticket->save()) {
-           self::sendMailNotificationByType(self::TYPE_CLOSED_TICKET_NOTIFICATION, $ticket);
+           (new self)->sendMailNotificationByType(self::TYPE_CLOSED_TICKET_NOTIFICATION, $ticket);
            return true;
        }
        return false;
@@ -77,7 +78,7 @@ class Service extends BaseObject {
             if($ticket->save()) {
                 if(self::createMessage($ticket, $message, true)) {
                     Yii::$app->db->transaction->commit();
-                    self::sendMailNotificationByType(self::TYPE_NEW_TICKET_NOTIFICATION, $ticket);
+                    (new self)->sendMailNotificationByType(self::TYPE_NEW_TICKET_NOTIFICATION, $ticket);
                     return true;
                 }
             }
@@ -93,20 +94,29 @@ class Service extends BaseObject {
 
         $frontendUrl = $module->frontendUrl ?: 'https://' . $_SERVER['HTTP_HOST'];
         $backendUrl = $module->backendUrl ?: 'https://' . $_SERVER['HTTP_HOST'];
+
         $preMessage =  Html::tag('h3','Добрый день.') . '<br>';
+
         $lastMessage = $ticket->getMessages()->orderBy('id DESC')->one();
+
         $ticketLink = Html::a('Обращение под номером ' . $ticket->id, $frontendUrl . '/helpdesk/default/view/' . $ticket->id);
         $adminTicketLink = Html::a('Обращение под номером ' . $ticket->id, $backendUrl . '/helpdesk');
+
         $adminMail = Yii::$app->params['adminEmail'];
+
         $message = '';
         $subject = '';
         $to = '';
+
+        $replyTo = $ticket->email ?? $ticket->user->{$module->emailAttribute};
+
         switch ($type):
             case self::TYPE_NEW_TICKET_NOTIFICATION:
                     Yii::$app->mailer->compose($module->mailNotificationView,[
                         'content' => $preMessage . $ticketLink . ' успешно зарегистрировано.',
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo(Yii::$app->user->identity->email ?? Yii::$app->params['adminEmail'])
                     ->setTo($ticket->email)
                     ->setSubject('Ваше обращение успешно зарегистрировано.')
                     ->send();
@@ -116,6 +126,7 @@ class Service extends BaseObject {
                         'Суть обращения: <br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo($replyTo)
                     ->setTo($adminMail)
                     ->setSubject('Новое обращение в helpdesk.')
                     ->send();
@@ -127,6 +138,7 @@ class Service extends BaseObject {
                         'Текст ответа:<br>' . $lastMessage->message,
                     ])
                     ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setReplyTo($replyTo)
                     ->setTo($ticket->email)
                     ->setSubject('На ваше обращение ответили.')
                     ->send();
@@ -135,6 +147,7 @@ class Service extends BaseObject {
                         'content' => $preMessage . 'На ' . strtolower($ticketLink) . ' ответили.<br>' .
                             'Текст ответа:<br>' . $lastMessage->message,
                     ])
+                    ->setReplyTo($ticket->email ?? $ticket->user->{$module->emailAttribute})
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setTo($adminMail)
                     ->setSubject('В helpdesk новый ответ в обращении.')
