@@ -128,7 +128,7 @@ class Service extends BaseObject {
                     ->setFrom(Yii::$app->params['adminEmail'])
                     ->setReplyTo($replyTo)
                     ->setTo($adminMail)
-                    ->setSubject('Новое обращение в helpdesk.')
+                    ->setSubject($ticket->subject)
                     ->send();
                 break;
             case self::TYPE_NEW_RESPONSE_NOTIFICATION:
