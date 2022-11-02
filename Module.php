@@ -2,7 +2,9 @@
 
 namespace pantera\helpdesk;
 
-class Module extends \yii\base\Module {
+class Module extends \yii\base\Module
+{
+    public $controllerNamespace = 'pantera\helpdesk\controllers';
     public $profileModel = null;
     public $nameAttribute = 'name';
     public $emailAttribute = 'email';
