@@ -73,13 +73,22 @@ class DefaultController extends Controller {
         ];
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchModel = new TicketsSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->get());
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-        ]);
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('index', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+            ]);
+        } else {
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+            ]);
+        }
     }
 
     public function actionComment($id) {
