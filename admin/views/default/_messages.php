@@ -6,6 +6,15 @@
                 <div class="media-body">
                     <h5 class="media-heading"><?=$model->user_id ? $model->user->profile->name : 'Аноним' ?> (<?=Yii::$app->formatter->asDatetime($message->created_at)?>)</h5>
                     <?=$message->message?>
+                    <?php if (!empty($message->mediaOther)):  ?>
+                        <ul id="message-files">
+                            <?php foreach ($message->mediaOther as $key => $file): ?>
+                                <li>
+                                    <?=\yii\helpers\Html::a($file->name, ['download', 'id' => $file->id]) ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </div>
                 <div class="media-right">
                     <a href="#">
