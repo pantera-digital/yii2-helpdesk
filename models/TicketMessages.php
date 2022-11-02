@@ -48,7 +48,8 @@ class TicketMessages extends \yii\db\ActiveRecord
     {
         return [
             [['ticket_id', 'message'], 'required'],
-            [['ticket_id', 'is_admin'], 'integer'],
+            [['ticket_id'], 'integer'],
+            [['is_admin'], 'boolean'],
             [['message'], 'string'],
             [['created_at'], 'safe'],
         ];
