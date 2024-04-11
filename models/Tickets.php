@@ -6,8 +6,6 @@ use pantera\helpdesk\Module;
 use Yii;
 
 /**
- * This is the model class for table "{{%tickets}}".
- *
  * @property int $id
  * @property string $user_id User identity
  * @property string $subject Ticket theme
@@ -16,7 +14,6 @@ use Yii;
  * @property int $status Ticket status
  * @property string $created_at
  * @property string $updated_at
- *
  * @property TicketMessages[] $messages
  */
 class Tickets extends \yii\db\ActiveRecord
@@ -25,17 +22,11 @@ class Tickets extends \yii\db\ActiveRecord
     const STATUS_UPDATED_BY_USER = 1;
     const STATUS_CLOSED = 2;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return '{{%tickets}}';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -46,44 +37,39 @@ class Tickets extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getUser() {
-        /** @var Module $hd */
-        $hd = Yii::$app->getModule('helpdesk');
-        return $this->hasOne($hd->userClass, ['id' => 'user_id']);
+    public function isClosed()
+    {
+        return $this->status == self::STATUS_CLOSED;
     }
 
+    public function getMessages()
+    {
+        return $this->hasMany(TicketMessages::class, ['ticket_id' => 'id']);
+    }
+
+    public function getLastMessage()
+    {
+        return $this->getMessages()->orderBy('id DESC')->one();
+    }
 
     public function getLastAnswer()
     {
         return $this->getMessages()->orderBy('id DESC')->andWhere(['is_admin' => 1])->one();
     }
 
-    public function getLastMessage() {
-        return $this->getMessages()->orderBy('id DESC')->one();
+    public function getUser()
+    {
+        $module = Yii::$app->getModule('helpdesk');
+        return $this->hasOne($module->userClass, ['id' => 'user_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => 'User identity',
-            'subject' => 'Ticket theme',
-            'email' => 'User e-mail',
-            'name' => 'User name',
-            'status' => 'Ticket status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'subject' => 'Тема обращения',
+            'email' => 'Ваш e-mail',
+            'name' => 'Ваше имя',
+            'status' => 'Статус тикета',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMessages()
-    {
-        return $this->hasMany(TicketMessages::className(), ['ticket_id' => 'id']);
     }
 }

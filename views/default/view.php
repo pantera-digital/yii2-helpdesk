@@ -1,20 +1,19 @@
 <?php
+
+use yii\helpers\Html;
+
 $this->title = 'Вопросы';
 $this->params['breadcrumbs'][] = ['url' => ['index'], 'label' => 'Helpdesk'];
 $this->params['breadcrumbs'][] = 'Тикет [#' . str_pad($ticket->id, 4, 0, STR_PAD_LEFT) . ']';
 
 \pantera\helpdesk\Assets::register($this);
-?>
 
-<?php if (!Yii::$app->user->can('admin')): ?>
-        <?= \yii\helpers\Html::a('Новый вопрос', ['index'], ['class' => 'btn btn-default']) ?>
-<?php endif; ?>
-<div class="row">
+?><div class="row">
     <div class="col-md-6">
-        <?php if ($ticket->status !== \pantera\helpdesk\models\Tickets::STATUS_CLOSED): ?>
+        <?php if (!$ticket->isClosed()): ?>
             <?= $this->render('_formRequest', array('newMessage' => $newMessage, 'ticket' => $ticket)); ?>
         <?php else: ?>
-            <div class="alert alert-info" style="margin-top: <?= (Yii::$app->user->can('admin') ? '20px' : '') ?>;">Тикет закрыт</div>
+            <div class="alert alert-info">Тикет закрыт</div>
         <?php endif; ?>
         <?= $this->render('_messages', array('messages' => $messages)); ?>
     </div>

@@ -15,7 +15,7 @@ class DownloadAction extends \yii\base\Action
             ($model = Media::findOne($id))
             && ($ticketMessage = TicketMessages::findOne($model->model_id))
             && ($ticket = $ticketMessage->ticket)
-            && ($ticket->user_id == Yii::$app->user->id || Yii::$app->user->can('admin'))
+            && ($ticket->user_id == Yii::$app->user->id || Yii::$app->getModule('helpdesk')->isAdmin())
         ) {
             return Yii::$app->response->sendFile($model->getPath());
         }

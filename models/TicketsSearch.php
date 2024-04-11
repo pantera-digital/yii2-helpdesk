@@ -2,19 +2,15 @@
 
 namespace pantera\helpdesk\models;
 
-use Yii;
 use yii\data\ActiveDataProvider;
+use Yii;
 
 class TicketsSearch extends Tickets
 {
     public $withComments;
-
     public $withoutResponse;
-
     public $responsed;
-
     public $important;
-
     public $archive;
 
     public function rules()
@@ -24,15 +20,20 @@ class TicketsSearch extends Tickets
         ];
     }
 
-    public function search($params) {
+    public function search($params)
+    {
         $this->load($params);
+
         $query = Tickets::find();
-        if(empty($params)) {
+
+        if (empty($params)) {
             $this->withoutResponse = 1;
         }
+
         if ($this->withComments) {
-            $query->andWhere(['IS NOT', 'comment', null]);
+            $query->andWhere(['AND', ['!=', 'comment', ''], ['IS NOT', 'comment', null]]);
         }
+
         if ($this->withoutResponse) {
             $query->andWhere(['status' => self::STATUS_UPDATED_BY_USER]);
         } elseif ($this->responsed) {
@@ -46,7 +47,9 @@ class TicketsSearch extends Tickets
         if ($this->archive) {
             $query->andWhere(['status' => self::STATUS_CLOSED]);
         }
+
         $query->orderBy('id DESC');
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

@@ -5,14 +5,11 @@ namespace pantera\helpdesk\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%ticket_messages}}".
- *
  * @property int $id
  * @property int $ticket_id Ticket ID from tickets table
  * @property int $is_admin Admin or user message
  * @property string $message Message text
  * @property string $created_at
- *
  * @property TicketMessageFile $id0
  * @property Tickets $tickets
  */
@@ -23,7 +20,7 @@ class TicketMessages extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => \pantera\media\behaviors\MediaUploadBehavior::className(),
+                'class' => \pantera\media\behaviors\MediaUploadBehavior::class,
                 'buckets' => [
                     'mediaOther' => [
                         'multiple' => true,
@@ -33,9 +30,6 @@ class TicketMessages extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return '{{%ticket_messages}}';
@@ -55,25 +49,15 @@ class TicketMessages extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getTicket()
+    {
+        return $this->hasOne(Tickets::class, ['id' => 'ticket_id']);
+    }
+
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'ticket_id' => 'Ticket ID from tickets table',
-            'is_admin' => 'Admin or user message',
-            'message' => 'Message text',
-            'created_at' => 'Created At',
+            'message' => 'Сообщение',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTicket()
-    {
-        return $this->hasOne(Tickets::className(), ['id' => 'ticket_id']);
     }
 }

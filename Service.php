@@ -2,67 +2,57 @@
 
 namespace pantera\helpdesk;
 
-use pantera\helpdesk\models\CreateTicketForm;
 use pantera\helpdesk\models\TicketMessages;
 use pantera\helpdesk\models\Tickets;
-use phpDocumentor\Reflection\Types\Self_;
-use yii\base\BaseObject;
-use Yii;
-use yii\db\Expression;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\web\UploadedFile;
+use yii\db\Expression;
+use Yii;
 
-class Service extends BaseObject {
-
+class Service extends \yii\base\BaseObject
+{
     const TYPE_NEW_TICKET_NOTIFICATION = 'ticket';
     const TYPE_NEW_RESPONSE_NOTIFICATION = 'response';
     const TYPE_CLOSED_TICKET_NOTIFICATION = 'closed';
 
-    /**
-     * @param Tickets $ticket
-     */
-    public static function toggleImportant(Tickets $ticket) {
-        $ticket->important = $ticket->important ? 0 : 1;
+    public static function toggleImportant(Tickets $ticket)
+    {
+        $ticket->important = (int)!$ticket->important;
         $ticket->save();
     }
 
-    /**
-     * @return array|null|\yii\db\ActiveRecord[]
-     */
-    public static function getActiveTicketsForCurrentUser() {
-        if(!Yii::$app->user->isGuest) {
-            return Tickets::find()->where([
-                'user_id' => Yii::$app->user->id
-            ])->orderBy('last_message DESC')->all();
+    public static function getActiveTicketsForCurrentUser()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return Tickets::find()
+                ->where(['user_id' => Yii::$app->user->id])
+                ->orderBy('last_message DESC')
+                ->all();
         }
         return null;
     }
 
-    public static function getActiveTicketsForAdmin() {
-        if(Yii::$app->user->can('admin')) {
-            return Tickets::find()->orderBy('last_message DESC')->all();
-        }
-        return null;
-    }
-
-    public static function closeTicket(Tickets $ticket) {
+    public static function closeTicket(Tickets $ticket)
+    {
        $ticket->status = Tickets::STATUS_CLOSED;
-       if($ticket->save()) {
+       if ($ticket->save()) {
            (new self)->sendMailNotificationByType(self::TYPE_CLOSED_TICKET_NOTIFICATION, $ticket);
            return true;
        }
        return false;
     }
 
-    public static function createMessage(Tickets $ticket, TicketMessages $message) {
+    public static function createMessage(Tickets $ticket, TicketMessages $message)
+    {
         $ticket->last_message = new Expression('NOW()');
+        $ticket->status = Yii::$app->getModule('helpdesk')->isAdmin()
+            ? Tickets::STATUS_UPDATED_BY_ADMIN
+            : Tickets::STATUS_UPDATED_BY_USER;
         $ticket->save();
         $message->ticket_id = $ticket->id;
-        $message->is_admin = Yii::$app->user->can('admin') ?: 0;
-        if($message->save()) {
+        $message->is_admin = (int)Yii::$app->getModule('helpdesk')->isAdmin();
+        if ($message->save()) {
             $ticket->refresh();
-            if(count($ticket->messages) > 1) {
+            if (count($ticket->messages) > 1) {
                 (new self)->sendMailNotificationByType(self::TYPE_NEW_RESPONSE_NOTIFICATION, $ticket);
             }
             return true;
@@ -70,13 +60,16 @@ class Service extends BaseObject {
         return false;
     }
 
-    public static function createTicket($ticket, $message) {
+    public static function createTicket($ticket, $message)
+    {
         try {
             Yii::$app->db->beginTransaction();
-            $ticket->status = Yii::$app->user->can('admin') ? Tickets::STATUS_UPDATED_BY_ADMIN : Tickets::STATUS_UPDATED_BY_USER;
+            $ticket->status = Yii::$app->getModule('helpdesk')->isAdmin()
+                ? Tickets::STATUS_UPDATED_BY_ADMIN
+                : Tickets::STATUS_UPDATED_BY_USER;
             $ticket->user_id = Yii::$app->user->id;
-            if($ticket->save()) {
-                if(self::createMessage($ticket, $message, true)) {
+            if ($ticket->save()) {
+                if (self::createMessage($ticket, $message, true)) {
                     Yii::$app->db->transaction->commit();
                     (new self)->sendMailNotificationByType(self::TYPE_NEW_TICKET_NOTIFICATION, $ticket);
                     return true;
@@ -88,7 +81,8 @@ class Service extends BaseObject {
         }
     }
 
-    public function sendMailNotificationByType(string $type, Tickets $ticket)  {
+    public function sendMailNotificationByType(string $type, Tickets $ticket)
+    {
         /** @var Module $module */
         $module = Yii::$app->getModule('helpdesk');
 
@@ -164,7 +158,5 @@ class Service extends BaseObject {
                     ->send();
                 break;
         endswitch;
-
     }
-
 }

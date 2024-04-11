@@ -4,7 +4,7 @@ namespace pantera\helpdesk;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'pantera\helpdesk\controllers';
+    public $accessRoles = ['@'];
     public $profileModel = null;
     public $nameAttribute = 'name';
     public $emailAttribute = 'email';
@@ -14,4 +14,9 @@ class Module extends \yii\base\Module
     public $userClass = '\dektrium\user\models\User';
     public $frontendUrl = null;
     public $backendUrl = null;
+
+    public function isAdmin()
+    {
+        return false;
+    }
 }

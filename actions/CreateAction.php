@@ -6,12 +6,14 @@ use pantera\helpdesk\models\TicketMessages;
 use pantera\helpdesk\models\Tickets;
 use pantera\helpdesk\Service;
 use yii\base\Action;
-use Yii;
 use yii\helpers\Json;
+use Yii;
 
-class CreateAction extends Action {
-    public function run($id = null) {
-        if(Yii::$app->user->isGuest) {
+class CreateAction extends Action
+{
+    public function run($id = null)
+    {
+        if (Yii::$app->user->isGuest) {
             $postdata = http_build_query([
                 'secret' => $this->controller->module->googleCaptchaSecret,
                 'response' => Yii::$app->request->post('g-recaptcha-response')
@@ -37,18 +39,18 @@ class CreateAction extends Action {
         $ticket->load($params);
         $message->load($params);
 
-        if(!Yii::$app->user->isGuest || $data['success']) {
-            if(is_null($id) && Service::createTicket($ticket, $message)) {
+        if (!Yii::$app->user->isGuest || $data['success']) {
+            if (is_null($id) && Service::createTicket($ticket, $message)) {
                 if(!Yii::$app->request->isAjax) {
                     Yii::$app->session->setFlash('success', 'Тикет успешно создан');
                     return $this->controller->redirect(Yii::$app->request->referrer);
                 } else {
                     return $this->controller->asJson(['status' => 'success']);
                 }
-            } elseif(!is_null($id)) {
+            } elseif (!is_null($id)) {
                 $ticket = $this->controller->findTicket($id);
-                if(Service::createMessage($ticket, $message)) {
-                    if(!Yii::$app->request->isAjax) {
+                if (Service::createMessage($ticket, $message)) {
+                    if (!Yii::$app->request->isAjax) {
                         Yii::$app->session->setFlash('success', 'Сообщение успешно отправлено');
                         return $this->controller->redirect(Yii::$app->request->referrer);
                     } else {
